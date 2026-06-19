@@ -1,0 +1,308 @@
+{
+  "tools": [
+    {
+      "name": "sensorium_binning",
+      "description": "Bins a raw time-series microstate stream into discrete macrostate bins and calculates Walsh-Hadamard sequency profiles and TDA persistent homology.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": { "type": "number" },
+            "description": "1D array of numerical microstates"
+          },
+          "n_bins": {
+            "type": "integer",
+            "default": 3,
+            "description": "Number of binning intervals"
+          },
+          "max_edge_weight": {
+            "type": "number",
+            "default": 1.0,
+            "description": "TDA filtration distance threshold"
+          }
+        },
+        "required": ["data"]
+      }
+    },
+    {
+      "name": "causal_discovery",
+      "description": "Runs PC and FCI algorithms on tabular datasets to recover Directed Acyclic Graphs (DAG) or Partial Ancestral Graphs (PAG) under linear or non-linear kernel mode.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "variables": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Names of variables in the dataset"
+          },
+          "data_dict": {
+            "type": "object",
+            "description": "Mapping from variable names to numerical arrays"
+          },
+          "alpha": {
+            "type": "number",
+            "default": 0.05,
+            "description": "Significance level for independence tests"
+          },
+          "mode": {
+            "type": "string",
+            "enum": ["linear", "kernel"],
+            "default": "linear",
+            "description": "Linear partial correlation vs Kernel non-linear (R-HSIC) independence tests"
+          }
+        },
+        "required": ["variables", "data_dict"]
+      }
+    },
+    {
+      "name": "epistemic_gp_update",
+      "description": "Tracks and predicts epistemic belief states using online Gaussian Process (GP) kernel regression on continuous streams.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "X_train": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "description": "Historical 2D inputs of size (n_samples, n_features)"
+          },
+          "y_train": {
+            "type": "array",
+            "items": { "type": "number" },
+            "description": "Historical 1D observed outcomes"
+          },
+          "X_predict": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "description": "2D inputs to make predictions for"
+          },
+          "noise_level": {
+            "type": "number",
+            "default": 0.1,
+            "description": "Gaussian Process measurement noise"
+          }
+        },
+        "required": ["X_train", "y_train", "X_predict"]
+      }
+    },
+    {
+      "name": "thermodynamic_audit",
+      "description": "Calculates path entropy, Landauer limits of heat dissipation, and computes feasibility index for workloads.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "states": {
+            "type": "array",
+            "items": { "type": "number" },
+            "description": "Discrete sequence of states"
+          },
+          "bits_erased": {
+            "type": "integer",
+            "description": "Number of bits erased during computation"
+          },
+          "dataset_size_gb": {
+            "type": "number",
+            "description": "Data size in Gigabytes"
+          },
+          "available_ram_gb": {
+            "type": "number",
+            "description": "System RAM in Gigabytes"
+          },
+          "parameters_millions": {
+            "type": "number",
+            "description": "Model parameter count in millions"
+          },
+          "gpu_vram_gb": {
+            "type": "number",
+            "description": "System VRAM in Gigabytes"
+          }
+        },
+        "required": ["states", "bits_erased", "dataset_size_gb", "available_ram_gb", "parameters_millions", "gpu_vram_gb"]
+      }
+    },
+    {
+      "name": "meta_learning_lora",
+      "description": "Applies INT8 quantization and creates low-rank adapter (LoRA) matrices representing weight deltas.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "weights": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": { "type": "number" }
+            },
+            "description": "2D weight matrix to quantize"
+          },
+          "in_features": {
+            "type": "integer",
+            "description": "Number of input features for LoRA adapter"
+          },
+          "out_features": {
+            "type": "integer",
+            "description": "Number of output features for LoRA adapter"
+          },
+          "rank": {
+            "type": "integer",
+            "default": 4,
+            "description": "LoRA rank dimension"
+          }
+        },
+        "required": ["weights", "in_features", "out_features"]
+      }
+    },
+    {
+      "name": "robustness_regularization",
+      "description": "Simulates Wasserstein DRO bounds, Kolmogorov MDL regularization, or Reinforcement Learning-inspired dynamic risk parameter adjustment.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "simulation_type": {
+            "type": "string",
+            "enum": ["wasserstein_dro", "kolmogorov_mdl", "rl_adjustment"],
+            "description": "The type of robustness or regularization simulation to run."
+          },
+          "returns": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "description": "Returns vector for Wasserstein DRO."
+          },
+          "radius": {
+            "type": "number",
+            "default": 0.01,
+            "description": "Wasserstein ball perturbation radius."
+          },
+          "rule_complexities": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "List of description lengths/complexities of candidate rules for Kolmogorov MDL."
+          },
+          "data_likelihoods": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "description": "List of likelihoods/probabilities of data given each rule."
+          },
+          "reward_signals": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "description": "Historical reward feedback signals for Reinforcement Learning policy updates."
+          },
+          "learning_rate": {
+            "type": "number",
+            "default": 0.1,
+            "description": "Learning rate for Reinforcement Learning gradient updates."
+          }
+        },
+        "required": ["simulation_type"]
+      }
+    },
+    {
+      "name": "fetch_alpaca_market_quotes",
+      "description": "Fetches live or synthetic stock market quotes for a given symbol and limit to feed to the AGI sensorium.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "symbol": {
+            "type": "string",
+            "default": "SPY",
+            "description": "Stock symbol to fetch quotes for."
+          },
+          "limit": {
+            "type": "integer",
+            "default": 10,
+            "description": "Number of quote records to retrieve."
+          }
+        },
+        "required": []
+      }
+    },
+    {
+      "name": "read_system_file",
+      "description": "Securely reads the contents of a local file within the workspace.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Absolute or relative path of the file to read."
+          }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "search_project_directory",
+      "description": "Lists files or searches for pattern matches inside the project workspace directory.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "default": "",
+            "description": "Relative subdirectory path to search within the project."
+          },
+          "pattern": {
+            "type": "string",
+            "default": "*",
+            "description": "Filename glob pattern (e.g. *.py) to filter files."
+          }
+        },
+        "required": []
+      }
+    },
+    {
+      "name": "hchl_inference",
+      "description": "Runs inference using the Hypergeneralized Causal-Homological Latent (HCHL) Transformer model, checking causal d-separation, persistent homology, and robust optimization bounds.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "The user query prompt."
+          },
+          "system_prompt": {
+            "type": "string",
+            "default": "You are an HCHL Assistant.",
+            "description": "The system prompt framing the reasoning."
+          },
+          "domain": {
+            "type": "string",
+            "description": "Optional domain overrides (causal, epistemic, thermo, code, json, general)."
+          }
+        },
+        "required": ["prompt"]
+      }
+    },
+    {
+      "name": "run_compliance_audit",
+      "description": "Runs an automated standards compliance audit evaluating model history against ISO/IEC 42001 and NIST AI Risk Management Framework (AI RMF) 1.0.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query_logs": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Optional list of past query logs to audit."
+          }
+        },
+        "required": []
+      }
+    }
+  ]
+}
