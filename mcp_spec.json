@@ -303,6 +303,99 @@
         },
         "required": []
       }
+    },
+    {
+      "name": "mera_holographic_consensus",
+      "description": "Computes holographic MERA tensor consensus over candidate belief vectors across arbitrary dimensions.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "belief_vectors": {
+            "type": "array",
+            "items": { "type": "array", "items": { "type": "number" } },
+            "description": "N-by-D matrix of candidate agent belief vectors."
+          },
+          "expected_returns": {
+            "type": "array",
+            "items": { "type": "number" },
+            "description": "Expected return metric for each candidate."
+          }
+        },
+        "required": ["belief_vectors", "expected_returns"]
+      }
+    },
+    {
+      "name": "mera_hierarchical_consensus",
+      "description": "Recursively resolves MERA consensus across N-th level subgroup and sub-subgroup hierarchies.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "subgroup_tree": {
+            "type": "array",
+            "description": "Nested tree of subgroup elements containing belief_vectors, expected_returns, or child subgroups."
+          }
+        },
+        "required": ["subgroup_tree"]
+      }
+    },
+    {
+      "name": "betti_homology_evaluator",
+      "description": "Computes persistent homology void signatures (Betti numbers) for SaaS venture point clouds.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "bootstrap_confidence_interval",
+      "description": "Computes a non-parametric percentile bootstrap confidence interval for the mean of a 1D dataset.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": { "type": "number" },
+            "description": "1D numerical sample."
+          },
+          "n_boot": {
+            "type": "integer",
+            "default": 2000,
+            "description": "Number of bootstrap resamples."
+          },
+          "alpha": {
+            "type": "number",
+            "default": 0.05,
+            "description": "Significance level (e.g. 0.05 for 95% CI)."
+          }
+        },
+        "required": ["data"]
+      }
+    },
+    {
+      "name": "null_y_shuffle_test",
+      "description": "Executes a two-sided Monte Carlo permutation p-value test under the Y-shuffle null hypothesis.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "y": {
+            "type": "array",
+            "items": { "type": "number" },
+            "description": "Outcome vector Y."
+          },
+          "x": {
+            "type": "array",
+            "items": { "type": "number" },
+            "description": "Predictor vector X."
+          },
+          "n_perm": {
+            "type": "integer",
+            "default": 499,
+            "description": "Number of random permutations."
+          }
+        },
+        "required": ["y", "x"]
+      }
     }
   ]
 }

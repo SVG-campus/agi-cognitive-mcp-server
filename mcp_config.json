@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "mera-kmpa-swarm-framework": {
+      "command": "python",
+      "args": [
+        "C:/Users/svillalobosgonzalez1/Documents/GitHub/mera-kmpa-swarm-framework/mera_kmpa_mcp_server.py"
+      ]
+    }
+  }
+}
